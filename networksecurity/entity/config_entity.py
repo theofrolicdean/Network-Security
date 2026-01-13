@@ -33,3 +33,7 @@ class DataIngestionConfig:
         )
         self.train_test_split_ratio: float = training_pipeline\
                             .DATA_INGESTION_TRAIN_TEST_SPLIT_RATIO
+
+class DataValidationConfig:
+    def __init__(self, training_pipeline_config: TrainingPipelineConfig):
+        pass
