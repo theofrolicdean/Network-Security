@@ -1,4 +1,5 @@
 import sys
+from networksecurity.logging import logger
 
 def error_message_detail(error, error_detail: sys) -> str:
     _, _, exc_tb = error_detail.exc_info() # exc_tb -> exception traceback
@@ -17,3 +18,11 @@ class NetworkException(Exception):
 
     def __str__(self):
         return self.error_message
+    
+if __name__ == "__main__":
+    try:
+        logger.logging.INFO("Enter the try block")
+        a = int("Hello")
+        print(a)
+    except Exception as err:
+        raise NetworkException(error_message=err, error_detail=sys)
