@@ -16,6 +16,7 @@ DATASET_FILE_PATH: str = f"Network_Data/{FILE_NAME}"
 TRAIN_FILE_NAME: str = "train.csv"
 TEST_FILE_NAME: str = "test.csv"
 PIPELINE_NAME: str = "NetworkSecurity"
+CV_SPLIT = 5
 
 """
 Data Ingestion related constant
@@ -34,3 +35,4 @@ DATA_VALIDATION_INVALID_DIR: str = "invalid"
 DATA_VALIDATION_DRIFT_REPORT_DIR: str = "drift_report"
 DATA_VALIDATION_REPORT_FILE_NAME = "report.yaml"
 PREPROCESSING_OBJECT_FILE_NAME = "preprocessor.pkl"
+

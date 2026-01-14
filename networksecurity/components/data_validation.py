@@ -1,5 +1,25 @@
-import os
+from networksecurity.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact
+from networksecurity.entity.config_entity import DataValidationConfig
+from networksecurity.exception.exception import NetworkException
+from networksecurity.logging.logger import logging
+import sys
+import pandas as pd
 
 class DataValidation:
-    def __init__(self):
-        pass
+    def __init__(self, data_ingestion_artifact: DataIngestionArtifact,
+                 data_validation_config: DataValidationConfig):
+        try:
+            self.data_ingestion_artifact = data_ingestion_artifact
+            self.data_validation_config = data_validation_config
+        except Exception as err:
+            raise NetworkException(error_message=str(err), error_detail=sys)
+        
+    @staticmethod
+    def read_data(file_path) -> pd.DataFrame:
+        try:
+            df = pd.read_csv(file_path)
+            return df
+        except Exception as err:
+            raise NetworkException(error_message=str(err), error_detail=sys)
+    
+    
