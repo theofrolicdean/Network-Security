@@ -23,7 +23,7 @@ def write_yaml_file(file_path: str,
                if os.path.exists(file_path):
                     os.remove(file_path)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)  
-        with open(file_path, "w") as file_obj:
+        with open(file_path, "wb") as file_obj:
              yaml.dump(content, file_obj)
      except Exception as err:
         raise NetworkException(error_message=str(err), error_detail=sys)
