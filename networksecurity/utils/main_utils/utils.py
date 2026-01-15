@@ -3,6 +3,7 @@ from networksecurity.exception.exception import NetworkException
 from networksecurity.logging.logger import logging
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import r2_score
+from networksecurity.constant.training_pipeline import CV_SPLIT 
 import numpy as np
 import dill
 import sys
@@ -10,10 +11,16 @@ import os
 
 def read_yaml_file(file_path: str) -> dict:
     try:
-        with open(file_path, "rb") as file_obj:
-            return yaml.safe_load(file_obj)
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"YAML file not found in {file_path}")
+        with open(file_path, "r") as file_obj:
+            content = yaml.safe_load(file_obj)
+        logging.info(f"YAML file loaded successfully from {file_path}")
+        return content
+
     except Exception as err:
-            raise NetworkException(error_message=str(err), error_detail=sys)
+        raise NetworkException(error_message=str(err), error_detail=sys)
+
 
 def write_yaml_file(file_path: str,
                     content: object,
@@ -23,7 +30,7 @@ def write_yaml_file(file_path: str,
                if os.path.exists(file_path):
                     os.remove(file_path)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)  
-        with open(file_path, "wb") as file_obj:
+        with open(file_path, "w") as file_obj:
              yaml.dump(content, file_obj)
      except Exception as err:
         raise NetworkException(error_message=str(err), error_detail=sys)
@@ -35,6 +42,15 @@ def load_numpy_array_data(file_path: str) -> np.array:
      except Exception as err:
           raise NetworkException(error_message=str(err), error_detail=sys)
      
+def save_numpy_array_data(file_path: str, array: np.array):
+    try:
+        dir_path = os.path.dirname(file_path)
+        os.makedirs(dir_path, exist_ok=True)
+        with open(file_path, "wb") as file_obj:
+            np.save(file_obj, array)
+    except Exception as err:
+        raise NetworkException(error_message=str(err), error_detail=sys) 
+
 def save_object(file_path: str, obj: object) -> None:
     try:
         logging.info("Entered the save_object method of MainUtils class")
@@ -64,7 +80,8 @@ def evaluate_model(X_train, y_train, X_test, y_test,
         for name, model in models.items():
             print(f"Training Model: {name} ")
             model_param = params[name]
-            grid_search = GridSearchCV(estimator=model, param_grid=model_param, cv=5)
+            grid_search = GridSearchCV(estimator=model, param_grid=model_param, 
+                                    cv=CV_SPLIT)
             grid_search.fit(X_train, y_train)
             model.set_params(**grid_search.best_params_)
             model.fit(X_train, y_train)
@@ -78,3 +95,4 @@ def evaluate_model(X_train, y_train, X_test, y_test,
         return report
     except Exception as err:    
         raise NetworkException(error_message=str(err), error_detail=sys)
+    
