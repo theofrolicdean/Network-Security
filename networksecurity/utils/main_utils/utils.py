@@ -13,7 +13,7 @@ def read_yaml_file(file_path: str) -> dict:
     try:
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"YAML file not found in {file_path}")
-        with open(file_path, "r") as file_obj:
+        with open(file_path, "rb") as file_obj:
             content = yaml.safe_load(file_obj)
         logging.info(f"YAML file loaded successfully from {file_path}")
         return content
@@ -26,12 +26,13 @@ def write_yaml_file(file_path: str,
                     content: object,
                     replace: bool = False) -> None:
      try:
-        if replace:
-               if os.path.exists(file_path):
-                    os.remove(file_path)
+        if replace and os.path.exists(file_path):
+            os.remove(file_path)
+        
         os.makedirs(os.path.dirname(file_path), exist_ok=True)  
         with open(file_path, "w") as file_obj:
              yaml.dump(content, file_obj)
+     
      except Exception as err:
         raise NetworkException(error_message=str(err), error_detail=sys)
 

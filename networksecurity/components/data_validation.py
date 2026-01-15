@@ -15,7 +15,7 @@ class DataValidation:
         try:
             self.data_ingestion_artifact = data_ingestion_artifact
             self.data_validation_config = data_validation_config
-            #self._schema_config = read_yaml_file(SCHEMA_FILE_PATH)
+            self._schema_config = read_yaml_file(SCHEMA_FILE_PATH)
         except Exception as err:
             raise NetworkException(error_message=str(err), error_detail=sys)
         
@@ -47,6 +47,7 @@ class DataValidation:
             dir_path = os.path.dirname(drift_report_file_path)
             print(f"Directory drift report path: {dir_path}")
             os.makedirs(dir_path, exist_ok=True)
+            write_yaml_file(file_path=drift_report_file_path, content=report)
             
         except Exception as err:    
             raise NetworkException(error_message=str(err), error_detail=sys)
@@ -97,10 +98,11 @@ class DataValidation:
                 valid_test_file_path=self.data_ingestion_artifact.test_file_path,
                 invalid_train_file_path=None,
                 invalid_test_file_path=None,
-                #drift_report_file_path=self.data_validation_config.drift_report_path,
+                drift_report_file_path=self.data_validation_config.drift_report_path,
             )
 
             return data_validaton_artifact
 
         except Exception as err:
             raise NetworkException(error_message=str(err), error_detail=sys)
+
