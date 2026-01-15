@@ -28,7 +28,7 @@ class DataValidation:
             raise NetworkException(error_message=str(err), error_detail=sys)
     
     def detect_dataset_drift(self, base_df: pd.DataFrame, current_df: pd.DataFrame,
-                             threshold: int = 0.05) -> dict:
+                             threshold: float = 0.05) -> dict:
         try: 
             report = {}
 
@@ -47,6 +47,7 @@ class DataValidation:
             dir_path = os.path.dirname(drift_report_file_path)
             print(f"Directory drift report path: {dir_path}")
             os.makedirs(dir_path, exist_ok=True)
+            print("drift_report_file_path: ", drift_report_file_path)
             write_yaml_file(file_path=drift_report_file_path, content=report)
             
         except Exception as err:    
@@ -73,13 +74,12 @@ class DataValidation:
             
             # Validate number of columns
             for df in [train_df, test_df]:
-                validate_cols_status = self.validate_number_of_cols(train_df)
-                if not validate_cols_status:
+                status = self.validate_number_of_cols(train_df)
+                if not status:
                     print(f"{df.name} doesn't contain all columns")
             
             # Check data drift
-            data_drift_status = self.detect_dataset_drift(base_df=train_df, 
-                                                          current_df=test_df)
+            status = self.detect_dataset_drift(base_df=train_df, current_df=test_df)
             dir_path = os.path.dirname(self.data_validation_config.valid_train_file_path)
             os.makedirs(dir_path, exist_ok=True)
 
@@ -93,7 +93,7 @@ class DataValidation:
             )
 
             data_validaton_artifact =DataValidationArtifact(
-                validation_status=data_drift_status,
+                validation_status=status,
                 valid_train_file_path=self.data_ingestion_artifact.trained_file_path,
                 valid_test_file_path=self.data_ingestion_artifact.test_file_path,
                 invalid_train_file_path=None,
