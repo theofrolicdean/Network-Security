@@ -42,7 +42,6 @@ class DataIngestion:
             )
             logging.info("Performed train test split on the dataframe")
             dir_path = os.path.dirname(self.data_ingestion_config.training_file_path)
-            print(f"Directory path: {dir_path}")
             os.makedirs(dir_path, exist_ok=True)
             logging.info("Exporting train and test split path")
             train_df.to_csv(

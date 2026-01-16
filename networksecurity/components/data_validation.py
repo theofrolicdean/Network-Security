@@ -49,7 +49,6 @@ class DataValidation:
             os.makedirs(dir_path, exist_ok=True)
             print("drift_report_file_path: ", drift_report_file_path)
             write_yaml_file(file_path=drift_report_file_path, content=report)
-            
         except Exception as err:    
             raise NetworkException(error_message=str(err), error_detail=sys)
 
@@ -75,8 +74,8 @@ class DataValidation:
             # Validate number of columns
             for df in [train_df, test_df]:
                 status = self.validate_number_of_cols(train_df)
-                if not status:
-                    print(f"{df.name} doesn't contain all columns")
+                # if not status:
+                #     print(f"{df.name} doesn't contain all columns")
             
             # Check data drift
             status = self.detect_dataset_drift(base_df=train_df, current_df=test_df)
